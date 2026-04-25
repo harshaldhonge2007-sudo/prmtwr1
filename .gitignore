@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -141,3 +142,10 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+=======
+node_modules/
+dist/
+.env
+.DS_Store
+*.log
+>>>>>>> 432bebf (feat: initial commit of Election Assistant)
