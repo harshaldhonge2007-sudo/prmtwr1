@@ -1,9 +1,13 @@
 import { Router } from 'express';
-import { handleChat, getTimeline, getLocationInfo, getVotingGuide, getFaq } from '../controllers/apiController';
+import chatRoutes from './chatRoutes';
+import { getTimeline, getLocationInfo, getVotingGuide, getFaq } from '../controllers/apiController';
 
 const router = Router();
 
-router.post('/chat', handleChat);
+// Modular Routes
+router.use('/chat', chatRoutes);
+
+// Other Endpoints
 router.get('/timeline', getTimeline);
 router.post('/location-info', getLocationInfo);
 router.get('/voting-guide', getVotingGuide);

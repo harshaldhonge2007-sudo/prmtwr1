@@ -1,27 +1,50 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// Simple in-memory session store (Last 5 messages per session)
+const sessions = new Map<string, { role: string; parts: { text: string }[] }[]>();
+
 class GeminiService {
+  private genAI: GoogleGenerativeAI | null = null;
   private model: any;
 
   constructor() {
     const apiKey = process.env.GEMINI_API_KEY;
     if (apiKey) {
-      const genAI = new GoogleGenerativeAI(apiKey);
-      this.model = genAI.getGenerativeModel({ 
+      this.genAI = new GoogleGenerativeAI(apiKey);
+      this.model = this.genAI.getGenerativeModel({
         model: 'gemini-1.5-flash',
-        systemInstruction: 'You are ElecGuide, a professional expert on Indian elections. Be concise and factual.'
+        systemInstruction: 'You are ElecGuide, a helpful expert on the Indian election process. Provide concise, factual information about voter registration, IDs, EVMs, and polling steps. Maintain a professional tone. If asked about politics or candidates, politely decline and stick to the process.'
       });
     }
   }
 
-  async getChatResponse(prompt: string) {
-    if (!this.model) return null;
+  async getChatResponse(sessionId: string, message: string) {
+    if (!this.model) throw new Error('Gemini API not initialized');
+
+    // Get or initialize session history
+    if (!sessions.has(sessionId)) {
+      sessions.set(sessionId, []);
+    }
+    const history = sessions.get(sessionId)!;
+
     try {
-      const result = await this.model.generateContent(prompt);
-      return result.response.text();
-    } catch (error) {
-      console.error('Gemini Service Error:', error);
-      return null;
+      // Create chat session with history
+      const chat = this.model.startChat({ history });
+      const result = await chat.sendMessage(message);
+      const reply = result.response.text();
+
+      // Update history and keep only last 5 messages (10 items: 5 user, 5 AI)
+      history.push({ role: 'user', parts: [{ text: message }] });
+      history.push({ role: 'model', parts: [{ text: reply }] });
+      
+      if (history.length > 10) {
+        sessions.set(sessionId, history.slice(-10));
+      }
+
+      return reply;
+    } catch (error: any) {
+      console.error('Gemini Service Error:', error.message);
+      throw error;
     }
   }
 }
