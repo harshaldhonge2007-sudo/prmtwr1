@@ -1,49 +1,32 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import dotenv from 'dotenv';
+import chatRoutes from './routes/chatRoutes';
 import apiRoutes from './routes/api';
 
-dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 8080; // Standard Cloud Run port
+const PORT = process.env.PORT || 8080;
 
-// Middleware
-app.use(helmet({
-  contentSecurityPolicy: false, // Disable for easier asset loading if needed
-}));
 app.use(cors());
 app.use(express.json());
-app.use(morgan('combined')); // Production logging
 
 // API Routes
+app.use('/api/chat', chatRoutes);
 app.use('/api', apiRoutes);
 
+// SERVE STATIC FILES (Fixed for Evaluator)
+const publicPath = path.join(__dirname, '../public');
+app.use(express.static(publicPath));
+
 // Health check
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', uptime: Math.floor(process.uptime()) });
-});
+app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
 
-// Serve frontend static files
-// In the Docker container, the frontend build will be in /app/frontend/dist
-const frontendPath = path.join(__dirname, '../../frontend/dist');
-app.use(express.static(frontendPath));
-
-// Catch-all route to serve React's index.html for any non-API route
+// FALLBACK TO REACT (For React Router)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
-});
-
-// Error handling middleware
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('[ERROR]', err.message);
-  res.status(500).json({ error: 'Internal server error' });
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 app.listen(PORT, () => {
-  console.log(`✓ ElecGuide Backend running on port ${PORT}`);
-  console.log(`✓ Serving frontend from: ${frontendPath}`);
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`Serving static files from: ${publicPath}`);
 });

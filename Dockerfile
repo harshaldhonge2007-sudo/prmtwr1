@@ -1,37 +1,35 @@
-# Stage 1: Build Frontend
-FROM node:20-alpine AS frontend-build
-WORKDIR /app/frontend
-COPY frontend/package*.json ./
-RUN npm install
-COPY frontend/ ./
-RUN npm run build
+# Build stage
+FROM node:20-alpine AS builder
 
-# Stage 2: Build Backend
-FROM node:20-alpine AS backend-build
-WORKDIR /app/backend
-COPY backend/package*.json ./
-RUN npm install
-COPY backend/ ./
-RUN npm run build
-
-# Stage 3: Final Production Image
-FROM node:20-alpine
 WORKDIR /app
 
-# Copy built backend
-COPY --from=backend-build /app/backend/dist ./backend/dist
-COPY --from=backend-build /app/backend/package*.json ./backend/
-WORKDIR /app/backend
+# Copy all files
+COPY . .
+
+# Build Frontend
+RUN cd frontend && npm install && npm run build
+
+# Build Backend
+RUN cd backend && npm install && npm run build
+
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy backend dependencies
+COPY backend/package*.json ./
 RUN npm install --production
 
-# Copy built frontend
-COPY --from=frontend-build /app/frontend/dist /app/frontend/dist
+# Copy built backend
+COPY --from=builder /app/backend/dist ./dist
 
-# Env vars
+# Copy built frontend into a 'public' folder accessible by backend
+COPY --from=builder /app/frontend/dist ./public
+
 ENV PORT=8080
 ENV NODE_ENV=production
-
 EXPOSE 8080
 
-# Run backend
+# Start from the backend dist folder
 CMD ["node", "dist/index.js"]
