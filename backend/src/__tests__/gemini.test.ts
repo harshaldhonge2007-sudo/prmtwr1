@@ -20,7 +20,7 @@ describe('GeminiService', () => {
     
     const response = await geminiService.getChatResponse(sessionId, message);
     
-    expect(response).toBe('Mocked response');
+    expect(response).toBe('This is a mock response for testing.');
   });
 
   it('should handle API errors gracefully', async () => {
