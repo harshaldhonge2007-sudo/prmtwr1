@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { auth, onAuthStateChanged, trackEvent } from './firebase/config';
-import { type User as FirebaseUser } from 'firebase/auth';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Chat from './pages/Chat';
@@ -13,11 +12,8 @@ import FAQ from './pages/FAQ';
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [fontSize, setFontSize] = useState('normal');
-  const [user, setUser] = useState<FirebaseUser | null>(null);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
       if (currentUser) trackEvent('login', { method: 'google' });
     });
     return () => unsubscribe();
