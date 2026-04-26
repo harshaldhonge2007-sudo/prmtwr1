@@ -1,5 +1,7 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { auth, onAuthStateChanged, trackEvent } from './firebase/config';
+import { type User as FirebaseUser } from 'firebase/auth';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Chat from './pages/Chat';
@@ -11,6 +13,19 @@ import FAQ from './pages/FAQ';
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [fontSize, setFontSize] = useState('normal');
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) trackEvent('login', { method: 'google' });
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    trackEvent('page_view', { page: window.location.pathname });
+  }, []);
 
   useEffect(() => {
     // Check system preference on load
@@ -37,6 +52,7 @@ function App() {
 
   return (
     <Router>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <div className="min-h-screen flex flex-col font-sans transition-colors duration-300">
         <Navbar 
           darkMode={darkMode} 
@@ -44,7 +60,7 @@ function App() {
           fontSize={fontSize}
           setFontSize={setFontSize}
         />
-        <main className="flex-grow container mx-auto px-4 py-8">
+        <main id="main-content" className="flex-grow container mx-auto px-4 py-8">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/chat" element={<Chat />} />
