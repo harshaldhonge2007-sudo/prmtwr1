@@ -3,18 +3,18 @@ import geminiService from '../services/geminiService';
 
 export const handleChat = async (req: Request, res: Response) => {
   try {
-    const { message } = req.body;
+    const { message, sessionId } = req.body;
     
     if (!message || typeof message !== 'string' || message.length > 500) {
       return res.status(400).json({ error: 'Invalid message. Max 500 characters allowed.' });
     }
 
-    let reply = await geminiService.getChatResponse(message);
+    // Fixed: Passing sessionId as the first argument
+    const finalSessionId = sessionId || 'default-session';
+    let reply = await geminiService.getChatResponse(finalSessionId, message);
 
     if (!reply) {
-      const lower = message.toLowerCase();
-      if (lower.includes('vote')) reply = "To vote in India: Ensure you're registered, find your booth at voters.eci.gov.in, and visit with your ID.";
-      else reply = "I am here to help with your election questions.";
+      reply = "I am here to help with your election questions.";
     }
 
     res.json({ reply });
