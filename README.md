@@ -1,6 +1,6 @@
 # ElecGuide - Election Process Education Assistant
 
-![CI](https://github.com/harshaldhonge2007-sudo/prmtwr1/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/harshaldhonge2007-sudo/prmtwr1/actions/workflows/ci.yml/badge.svg?branch=main)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 An AI-powered web app to educate Indian citizens on the election process.
