@@ -1,12 +1,16 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
+import helmet from 'helmet';
 import chatRoutes from './routes/chatRoutes';
 import apiRoutes from './routes/api';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+app.use(helmet({
+  contentSecurityPolicy: false, // Allow React app to load external assets
+}));
 app.use(cors());
 app.use(express.json());
 

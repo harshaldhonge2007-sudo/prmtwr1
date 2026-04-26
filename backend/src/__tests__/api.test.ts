@@ -40,13 +40,21 @@ describe('Election Assistant API Suite', () => {
     expect(res.body).toHaveProperty('booth');
   });
 
-  // Test 5: Chat Validation
+  // Test 5: Chat Validation - Empty Message
   test('POST /api/chat with empty message should return 400', async () => {
     const res = await request(app).post('/api/chat').send({ message: '' });
     expect(res.status).toBe(400);
   });
 
-  // Test 6: Guide API
+  // Test 6: Chat Validation - Long Message (Edge Case)
+  test('POST /api/chat with very long message should still return 200', async () => {
+    const longMessage = 'a'.repeat(2000);
+    const res = await request(app).post('/api/chat').send({ message: longMessage });
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('reply');
+  });
+
+  // Test 7: Guide API
   test('GET /api/voting-guide should return voting steps', async () => {
     const res = await request(app).get('/api/voting-guide');
     expect(res.status).toBe(200);

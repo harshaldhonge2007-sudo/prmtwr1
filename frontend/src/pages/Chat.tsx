@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, Bot, Loader2 } from 'lucide-react';
+import { Send, User, Bot, Loader2, Volume2 } from 'lucide-react';
 import { auth, saveChatHistory } from '../firebase/config';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
 
@@ -91,13 +91,24 @@ const Chat = () => {
     }
   };
 
+  const speak = (text: string) => {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    window.speechSynthesis.speak(utterance);
+  };
+
   return (
     <div className="max-w-4xl mx-auto flex flex-col h-[80vh] glass-panel rounded-2xl overflow-hidden" role="main" aria-label="Election Assistant Chat Interface">
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex justify-between items-center">
         <h2 className="text-xl font-bold flex items-center gap-2">
           <Bot className="w-6 h-6 text-primary-500" aria-hidden="true" />
           Election Assistant
         </h2>
+        <div className="text-[10px] uppercase tracking-widest text-gray-400 font-bold bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700">
+          Powered by Google Gemini
+        </div>
       </div>
 
       <div className="flex-grow overflow-y-auto p-6 space-y-6" role="log" aria-live="polite">
@@ -115,12 +126,22 @@ const Chat = () => {
                 </div>
               )}
               
-              <div className={`max-w-[80%] rounded-2xl p-4 ${
+              <div className={`max-w-[80%] rounded-2xl p-4 relative group ${
                 msg.role === 'user' 
                   ? 'bg-primary-600 text-white rounded-tr-none' 
                   : 'bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm rounded-tl-none'
               }`} aria-label={`${msg.role === 'user' ? 'Your message' : 'Assistant message'}: ${msg.content}`}>
                 <p className="whitespace-pre-wrap">{msg.content}</p>
+                
+                {msg.role === 'assistant' && (
+                  <button 
+                    onClick={() => speak(msg.content)}
+                    className="absolute -right-10 top-2 p-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-400 hover:text-primary-500 opacity-0 group-hover:opacity-100 transition-all shadow-sm"
+                    aria-label="Listen to response"
+                  >
+                    <Volume2 className="w-4 h-4" />
+                  </button>
+                )}
               </div>
 
               {msg.role === 'user' && (
