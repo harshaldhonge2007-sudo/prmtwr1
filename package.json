@@ -6,6 +6,7 @@
   "author": "ElecGuide Team",
   "license": "MIT",
   "scripts": {
+    "postinstall": "npm run install:all",
     "install:all": "cd frontend && npm install && cd ../backend && npm install",
     "build:frontend": "cd frontend && npm run build",
     "build:backend": "cd backend && npm run build",
