@@ -93,7 +93,7 @@ const LocationInfo = () => {
                loading="lazy"
                allowFullScreen
                referrerPolicy="no-referrer-when-downgrade"
-               src={`https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY_HERE&q=${encodeURIComponent(results.booth + ' ' + results.address)}&zoom=15`}
+               src={`https://maps.google.com/maps?q=${encodeURIComponent(results.booth + ' ' + results.address)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
                title="Polling Booth Location"
              ></iframe>
              <div className="absolute top-4 right-4 bg-white/90 dark:bg-gray-900/90 px-3 py-1.5 rounded-lg shadow-sm backdrop-blur-sm text-[10px] font-bold uppercase tracking-widest text-gray-500 border border-gray-200 dark:border-gray-700">

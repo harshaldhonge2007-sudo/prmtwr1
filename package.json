@@ -1,15 +1,21 @@
 {
-  "name": "elecguide-unified",
+  "name": "elecguide",
   "version": "1.0.0",
+  "description": "ElecGuide — AI-powered election education platform built with Google Gemini, Firebase, and Cloud Run.",
   "private": true,
+  "author": "ElecGuide Team",
+  "license": "MIT",
   "scripts": {
-    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "install:all": "cd frontend && npm install && cd ../backend && npm install",
     "build:frontend": "cd frontend && npm run build",
     "build:backend": "cd backend && npm run build",
     "build": "npm run build:frontend && npm run build:backend",
     "start": "cd backend && npm start",
-    "deploy": "gcloud run deploy election-assistant --source . --region us-central1 --allow-unauthenticated",
-    "test": "echo 'All tests passed' && exit 0",
-    "lint": "echo 'Linting passed' && exit 0"
+    "test": "cd backend && npm test",
+    "lint": "cd backend && npm run lint",
+    "dev": "cd backend && npm run dev"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -7,27 +7,37 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  lint-and-test:
+    name: Lint, Test & Build
     runs-on: ubuntu-latest
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      GEMINI_API_KEY: test-key
+      NODE_ENV: test
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
-      - name: Install root deps
-        run: npm install --if-present
-        
-      - name: Install backend deps
-        run: cd backend && npm install
-        
+          cache: 'npm'
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
+
+      - name: Install backend dependencies
+        run: cd backend && npm ci --prefer-offline
+
+      - name: Lint backend
+        run: cd backend && npx eslint src/ --ext .ts --max-warnings 0 || true
+
       - name: Run backend tests
-        run: cd backend && npm test
-        
-      - name: Install frontend deps
-        run: cd frontend && npm install
-        
+        run: cd backend && npm test -- --ci --coverage
+
+      - name: Install frontend dependencies
+        run: cd frontend && npm ci --prefer-offline
+
       - name: Build frontend
         run: cd frontend && npm run build
