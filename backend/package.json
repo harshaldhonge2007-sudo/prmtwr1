@@ -14,7 +14,13 @@
     "lint": "eslint src/ --ext .ts",
     "lint:fix": "eslint src/ --ext .ts --fix"
   },
-  "keywords": ["election", "education", "gemini", "google-cloud", "typescript"],
+  "keywords": [
+    "election",
+    "education",
+    "gemini",
+    "google-cloud",
+    "typescript"
+  ],
   "type": "commonjs",
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
@@ -23,6 +29,7 @@
     "dotenv": "^17.4.2",
     "express": "^4.18.2",
     "express-rate-limit": "^8.4.1",
+    "express-validator": "^7.3.2",
     "helmet": "^8.1.0"
   },
   "devDependencies": {

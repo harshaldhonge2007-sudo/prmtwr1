@@ -41,7 +41,7 @@ const Home = () => {
       </motion.div>
 
       <motion.div 
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl mb-16"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -61,6 +61,22 @@ const Home = () => {
           </motion.div>
         ))}
       </motion.div>
+
+      <motion.section 
+        className="max-w-4xl w-full glass-panel p-8 md:p-12 rounded-3xl mt-8 text-center"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <h2 className="text-3xl font-bold mb-6">About Our Mission</h2>
+        <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+          <strong>The Problem:</strong> Elections can be confusing, and misinformation spreads rapidly. Millions of first-time voters struggle to find accurate, unbiased information on how to register, where to vote, and what the process entails.
+        </p>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+          <strong>Our Solution:</strong> ElecGuide leverages AI to provide a safe, simple, and completely objective educational platform. We guide citizens step-by-step to ensure they can confidently and securely participate in the democratic process.
+        </p>
+      </motion.section>
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import { type Request, type Response } from 'express';
+import { validationResult } from 'express-validator';
 import geminiService from '../services/geminiService';
 import { getCache, setCache } from '../utils/cache';
 import { logger } from '../utils/logger';
 
 /** Maximum allowed message length (characters) */
-const MAX_MESSAGE_LENGTH = 2000;
+const MAX_MESSAGE_LENGTH = 1000;
 
 /**
  * Handle incoming chat messages.
@@ -12,18 +13,13 @@ const MAX_MESSAGE_LENGTH = 2000;
  */
 export const handleChat = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { message, sessionId } = req.body as { message?: string; sessionId?: string };
-
-    // Input validation
-    if (!message || typeof message !== 'string' || message.trim().length === 0) {
-      res.status(400).json({ error: 'Message is required and must be a non-empty string.' });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ error: errors.array()[0].msg });
       return;
     }
 
-    if (message.length > MAX_MESSAGE_LENGTH) {
-      res.status(400).json({ error: `Message must be under ${MAX_MESSAGE_LENGTH} characters.` });
-      return;
-    }
+    const { message, sessionId } = req.body as { message: string; sessionId?: string };
 
     // Check cache for repeated queries
     const cacheKey = `chat_${message.trim().toLowerCase()}`;

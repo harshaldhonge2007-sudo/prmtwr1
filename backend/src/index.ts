@@ -4,9 +4,19 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import compression from 'compression';
-import chatRoutes from './routes/chatRoutes';
-import apiRoutes from './routes/api';
-import { logger } from './utils/logger';
+import { logger } from './utils';
+import { apiRoutes, chatRoutes } from './routes';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+// ---------------------
+// Environment Validation
+// ---------------------
+if (!process.env.GEMINI_API_KEY) {
+  logger.error('CRITICAL ERROR: GEMINI_API_KEY environment variable is missing.');
+  process.exit(1);
+}
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -14,7 +24,23 @@ const PORT = process.env.PORT || 8080;
 // ---------------------
 // Security Middleware
 // ---------------------
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", 'https://apis.google.com', 'https://www.gstatic.com'],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        imgSrc: ["'self'", 'data:', 'https://www.google.com', 'https://lh3.googleusercontent.com'],
+        connectSrc: ["'self'", 'https://generativelanguage.googleapis.com', 'https://firestore.googleapis.com', 'https://identitytoolkit.googleapis.com'],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+        frameSrc: ["'self'", 'https://maps.google.com', 'https://election-assistant-844332838952.firebaseapp.com'],
+      },
+    },
+    xContentTypeOptions: true,
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  })
+);
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 app.use(compression());
 app.use(express.json({ limit: '10kb' }));
@@ -59,6 +85,11 @@ app.get('/health', (_req: Request, res: Response) => {
   });
 });
 
+/** Explicit root route handler to solve index.html serving issue */
+app.get('/', (_req: Request, res: Response) => {
+  res.sendFile(path.join(publicPath, 'index.html'));
+});
+
 /** Fallback: serve React app for client-side routing */
 app.get('*', (_req: Request, res: Response) => {
   res.sendFile(path.join(publicPath, 'index.html'));
@@ -70,10 +101,12 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({ error: 'An unexpected error occurred.' });
 });
 
-app.listen(PORT, () => {
-  logger.info(`ElecGuide server running on port ${PORT}`);
-  logger.info(`Static files served from: ${publicPath}`);
-  logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    logger.info(`ElecGuide server running on port ${PORT}`);
+    logger.info(`Static files served from: ${publicPath}`);
+    logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
+}
 
 export default app;

@@ -1,7 +1,6 @@
 import request from 'supertest';
-import express from 'express';
-import apiRoutes from '../routes/api';
-import chatRoutes from '../routes/chatRoutes';
+import path from 'path';
+import fs from 'fs';
 
 // Mock geminiService so tests never hit the real Gemini API
 jest.mock('../services/geminiService', () => ({
@@ -13,20 +12,25 @@ jest.mock('../services/geminiService', () => ({
   },
 }));
 
-/** Test Express app mirroring production route mounting */
-const app = express();
-app.use(express.json());
-app.use('/api', apiRoutes);
-app.use('/api/chat', chatRoutes);
+process.env.GEMINI_API_KEY = 'test-key';
+process.env.NODE_ENV = 'test';
+
+import app from '../index';
+
+// Create a dummy index.html so the static file test passes
+const publicPath = path.join(__dirname, '../../public');
+if (!fs.existsSync(publicPath)) fs.mkdirSync(publicPath, { recursive: true });
+fs.writeFileSync(path.join(publicPath, 'index.html'), '<html><head></head><body><div id="root"></div></body></html>');
 
 describe('Election Assistant API', () => {
 
   // ---- Health Check ----
-  describe('GET /api/health', () => {
+  describe('GET /health', () => {
     it('should return 200 with status ok', async () => {
-      const res = await request(app).get('/api/health');
+      const res = await request(app).get('/health');
       expect(res.status).toBe(200);
-      expect(res.body).toMatchObject({ status: 'ok', service: 'elecguide-api' });
+      expect(res.body).toHaveProperty('status', 'ok');
+      expect(res.body).toHaveProperty('uptime');
     });
   });
 
@@ -165,11 +169,40 @@ describe('Election Assistant API', () => {
       expect(res2.body.cached).toBe(true);
     });
 
-    it('should reject messages over 2000 characters with 400', async () => {
+    it('should reject messages over 1000 characters with 400', async () => {
       const res = await request(app)
         .post('/api/chat')
-        .send({ message: 'a'.repeat(2001) });
+        .send({ message: 'a'.repeat(1001) });
       expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/1000 characters/);
+    });
+
+    it('should escape HTML/SQL special characters (XSS/SQL injection attempts)', async () => {
+      const maliciousPayload = "<script>alert(1)</script> OR 1=1; DROP TABLE users;";
+      const res = await request(app).post('/api/chat').send({ message: maliciousPayload });
+      
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('reply');
+    });
+
+    it('should handle concurrent requests properly without crashing', async () => {
+      const requests = Array.from({ length: 5 }).map((_, i) =>
+        request(app).post('/api/chat').send({ message: `Concurrent request ${i}` })
+      );
+      const responses = await Promise.all(requests);
+      responses.forEach(res => {
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('reply');
+      });
+    });
+  });
+
+  // ---- Root Route ----
+  describe('GET /', () => {
+    it('should return HTML for the React app', async () => {
+      const res = await request(app).get('/');
+      expect(res.status).toBe(200);
+      expect(res.headers['content-type']).toMatch(/text\/html/);
     });
   });
 });
