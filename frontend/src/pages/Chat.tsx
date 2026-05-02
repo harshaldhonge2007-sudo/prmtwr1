@@ -125,13 +125,13 @@ const Chat = () => {
     <div
       className="max-w-4xl mx-auto flex flex-col h-[80vh] glass-panel rounded-2xl overflow-hidden"
       role="region"
-      aria-label="Election Assistant Chat Interface"
+      aria-label="CivicSync Chat Interface"
     >
       {/* Header */}
       <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex justify-between items-center">
         <h1 className="text-xl font-bold flex items-center gap-2">
           <Bot className="w-6 h-6 text-primary-500" aria-hidden="true" />
-          Election Assistant
+          CivicSync
         </h1>
         <div className="text-[10px] uppercase tracking-widest text-gray-400 font-bold bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700">
           Powered by Google Gemini

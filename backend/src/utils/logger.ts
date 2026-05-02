@@ -1,5 +1,5 @@
 /**
- * Structured logger utility for the ElecGuide application.
+ * Structured logger utility for the CivicSync application.
  * Provides consistent log formatting with timestamps and log levels.
  */
 type LogLevel = 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';

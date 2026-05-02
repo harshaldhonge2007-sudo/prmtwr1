@@ -1,14 +1,14 @@
-# ElecGuide — AI-Powered Election Education Assistant
+# CivicSync — AI-Powered Election Education Assistant
 
 ![CI](https://github.com/harshaldhonge2007-sudo/prmtwr1/actions/workflows/ci.yml/badge.svg?branch=main)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![Google Gemini](https://img.shields.io/badge/AI-Google%20Gemini-blue)
 ![Cloud Run](https://img.shields.io/badge/Deploy-Cloud%20Run-orange)
 
-> **ElecGuide** is an AI-powered web application that educates Indian citizens about the democratic election process — from voter registration to polling booth procedures — using Google Gemini AI, Firebase, and Google Cloud Run.
+> **CivicSync** is an AI-powered web application that educates Indian citizens about the democratic election process — from voter registration to polling booth procedures — using Google Gemini AI, Firebase, and Google Cloud Run.
 
 ## 🌐 Live Demo
-**[https://election-assistant-844332838952.us-central1.run.app](https://election-assistant-844332838952.us-central1.run.app)**
+**[https://civicsync-844332838952.us-central1.run.app](https://civicsync-844332838952.us-central1.run.app)**
 
 ---
 
@@ -121,7 +121,7 @@ cd backend && npm run dev
 ## ☁️ Deploy to Cloud Run
 
 ```bash
-gcloud run deploy election-assistant \
+gcloud run deploy civicsync \
   --source . \
   --region us-central1 \
   --allow-unauthenticated \

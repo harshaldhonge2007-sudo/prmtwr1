@@ -1,8 +1,8 @@
 {
   "name": "elecguide-backend",
   "version": "1.0.0",
-  "description": "Backend API server for ElecGuide — an AI-powered election education assistant using Google Gemini.",
-  "author": "ElecGuide Team",
+  "description": "Backend API server for CivicSync — an AI-powered election education assistant using Google Gemini.",
+  "author": "CivicSync Team",
   "license": "MIT",
   "main": "dist/index.js",
   "scripts": {

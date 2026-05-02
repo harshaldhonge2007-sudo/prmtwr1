@@ -10,7 +10,7 @@ const Footer = () => (
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-800 pt-6">
         <div className="flex items-center gap-2">
           <span className="bg-primary-600 text-white p-1 rounded text-xs font-bold">✓</span>
-          <span>ElecGuide © {new Date().getFullYear()}</span>
+          <span>CivicSync © {new Date().getFullYear()}</span>
         </div>
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1">

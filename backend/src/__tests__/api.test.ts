@@ -22,7 +22,7 @@ const publicPath = path.join(__dirname, '../../public');
 if (!fs.existsSync(publicPath)) fs.mkdirSync(publicPath, { recursive: true });
 fs.writeFileSync(path.join(publicPath, 'index.html'), '<html><head></head><body><div id="root"></div></body></html>');
 
-describe('Election Assistant API', () => {
+describe('CivicSync API', () => {
 
   // ---- Health Check ----
   describe('GET /health', () => {

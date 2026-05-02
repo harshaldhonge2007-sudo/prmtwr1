@@ -35,9 +35,9 @@ const Navbar = ({ darkMode, toggleDarkMode, fontSize, setFontSize }: NavbarProps
   return (
     <nav className="glass-panel sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2" aria-label="ElecGuide Home">
+        <Link to="/" className="text-2xl font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2" aria-label="CivicSync Home">
           <span className="bg-primary-600 text-white p-2 rounded-lg">✓</span>
-          ElecGuide
+          CivicSync
         </Link>
 
         <div className="hidden md:flex space-x-1" role="navigation">

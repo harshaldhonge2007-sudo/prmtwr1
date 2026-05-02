@@ -27,7 +27,7 @@ class GeminiService {
       this.model = genAI.getGenerativeModel({
         model: 'gemini-1.5-flash',
         systemInstruction:
-          'You are ElecGuide, an expert on the Indian election process. ' +
+          'You are CivicSync, an expert on the Indian election process. ' +
           'Provide concise, factual information about voter registration, ' +
           'Voter IDs, EVMs, VVPAT, and polling procedures. ' +
           'Maintain a professional and neutral tone. ' +

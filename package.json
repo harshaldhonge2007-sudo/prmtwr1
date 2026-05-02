@@ -1,9 +1,9 @@
 {
   "name": "elecguide",
   "version": "1.0.0",
-  "description": "ElecGuide — AI-powered election education platform built with Google Gemini, Firebase, and Cloud Run.",
+  "description": "CivicSync — AI-powered election education platform built with Google Gemini, Firebase, and Cloud Run.",
   "private": true,
-  "author": "ElecGuide Team",
+  "author": "CivicSync Team",
   "license": "MIT",
   "scripts": {
     "postinstall": "npm run install:all",

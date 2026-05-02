@@ -15,7 +15,7 @@ import {
 import { getAnalytics, logEvent, type Analytics } from 'firebase/analytics';
 
 /**
- * Firebase configuration for ElecGuide.
+ * Firebase configuration for CivicSync.
  * All sensitive values are scoped to this project (prmtwr1).
  */
 const firebaseConfig = {

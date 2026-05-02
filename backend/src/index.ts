@@ -34,7 +34,7 @@ app.use(
         imgSrc: ["'self'", 'data:', 'https://www.google.com', 'https://lh3.googleusercontent.com'],
         connectSrc: ["'self'", 'https://generativelanguage.googleapis.com', 'https://firestore.googleapis.com', 'https://identitytoolkit.googleapis.com'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-        frameSrc: ["'self'", 'https://maps.google.com', 'https://election-assistant-844332838952.firebaseapp.com'],
+        frameSrc: ["'self'", 'https://maps.google.com', 'https://civicsync-844332838952.firebaseapp.com'],
       },
     },
     xContentTypeOptions: true,
@@ -103,7 +103,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
-    logger.info(`ElecGuide server running on port ${PORT}`);
+    logger.info(`CivicSync server running on port ${PORT}`);
     logger.info(`Static files served from: ${publicPath}`);
     logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
   });

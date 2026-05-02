@@ -74,7 +74,7 @@ const Home = () => {
           <strong>The Problem:</strong> Elections can be confusing, and misinformation spreads rapidly. Millions of first-time voters struggle to find accurate, unbiased information on how to register, where to vote, and what the process entails.
         </p>
         <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-          <strong>Our Solution:</strong> ElecGuide leverages AI to provide a safe, simple, and completely objective educational platform. We guide citizens step-by-step to ensure they can confidently and securely participate in the democratic process.
+          <strong>Our Solution:</strong> CivicSync leverages AI to provide a safe, simple, and completely objective educational platform. We guide citizens step-by-step to ensure they can confidently and securely participate in the democratic process.
         </p>
       </motion.section>
     </div>
